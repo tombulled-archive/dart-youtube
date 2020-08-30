@@ -1,2 +1,2 @@
 # dart-youtube
-Dart YouTube API
+Dart YouTube Innertube API
