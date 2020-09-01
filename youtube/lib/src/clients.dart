@@ -38,7 +38,15 @@ class BaseClient {
         },
     };
 
-    BaseClient (context.ClientContext clientContext, [context.ApiContext apiContext]) {
+    BaseClient ([
+                context.ClientContext clientContext,
+                context.ApiContext apiContext
+            ]) {
+        clientContext = clientContext ?? context.getClientContext (
+            service: context.Service.YouTube,
+            device: context.Device.Web,
+        );
+
         this._apiContext = apiContext ?? context.ApiContext();
 
         this._dio = dio.Dio (
@@ -256,8 +264,24 @@ class BaseClient {
             }),
         );
     }
+}
 
-    Future<Map<String, dynamic>> musicSearchSuggestions([String input = '']) async {
+class BaseYouTubeClient extends BaseClient {
+    BaseYouTubeClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext
+    ]) : super(clientContext, apiContext);
+}
+
+class BaseYouTubeMusicClient extends BaseClient {
+    BaseYouTubeMusicClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext
+    ]) : super(clientContext, apiContext);
+
+    Future<Map<String, dynamic>> searchSuggestions ([
+                String input = ''
+            ]) async {
         return this._dispatch (
             'music/get_search_suggestions',
             payloadData: {
@@ -266,7 +290,9 @@ class BaseClient {
         );
     }
 
-    Future<Map<String, dynamic>> musicGetQueue({String playlistId, List<String> videoIds}) async {
+    Future<Map<String, dynamic>> getQueue ({
+                String playlistId, List<String> videoIds
+            }) async {
         return this._dispatch (
             'music/get_queue',
             payloadData: {
@@ -275,4 +301,139 @@ class BaseClient {
             },
         );
     }
+}
+
+class BaseYouTubeKidsClient extends BaseClient {
+    BaseYouTubeKidsClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext
+    ]) : super(clientContext, apiContext);
+
+    Future<Map<String, dynamic>> getKidsFlowData() async {
+        return this._dispatch (
+            'kids/get_kids_flow_data',
+            payloadData: {
+                'flowTypes': [
+                    'KIDS_FLOW_TYPE_ONBOARDING'
+                ],
+            },
+        );
+    }
+}
+
+class YouTubeWebClient extends BaseYouTubeClient {
+    YouTubeWebClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext,
+    ]) :super (
+        clientContext ?? context.getClientContext (
+            service: context.Service.YouTube,
+            device: context.Device.Web,
+        ),
+        apiContext,
+    );
+}
+
+class YouTubeIosClient extends BaseYouTubeClient {
+    YouTubeIosClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext,
+    ]) :super (
+        clientContext ?? context.getClientContext (
+            service: context.Service.YouTube,
+            device: context.Device.Ios,
+        ),
+        apiContext,
+    );
+}
+
+class YouTubeAndroidClient extends BaseYouTubeClient {
+    YouTubeAndroidClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext,
+    ]) :super (
+        clientContext ?? context.getClientContext (
+            service: context.Service.YouTube,
+            device: context.Device.Android,
+        ),
+        apiContext,
+    );
+}
+
+class YouTubeMusicWebClient extends BaseYouTubeMusicClient {
+    YouTubeMusicWebClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext,
+    ]) :super (
+        clientContext ?? context.getClientContext (
+            service: context.Service.YouTubeMusic,
+            device: context.Device.Web,
+        ),
+        apiContext,
+    );
+}
+
+class YouTubeMusicIosClient extends BaseYouTubeMusicClient {
+    YouTubeMusicIosClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext,
+    ]) :super (
+        clientContext ?? context.getClientContext (
+            service: context.Service.YouTubeMusic,
+            device: context.Device.Ios,
+        ),
+        apiContext,
+    );
+}
+
+class YouTubeMusicAndroidClient extends BaseYouTubeMusicClient {
+    YouTubeMusicAndroidClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext,
+    ]) :super (
+        clientContext ?? context.getClientContext (
+            service: context.Service.YouTubeMusic,
+            device: context.Device.Android,
+        ),
+        apiContext,
+    );
+}
+
+class YouTubeKidsWebClient extends BaseYouTubeKidsClient {
+    YouTubeKidsWebClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext,
+    ]) :super (
+        clientContext ?? context.getClientContext (
+            service: context.Service.YouTubeKids,
+            device: context.Device.Web,
+        ),
+        apiContext,
+    );
+}
+
+class YouTubeKidsIosClient extends BaseYouTubeKidsClient {
+    YouTubeKidsIosClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext,
+    ]) :super (
+        clientContext ?? context.getClientContext (
+            service: context.Service.YouTubeKids,
+            device: context.Device.Ios,
+        ),
+        apiContext,
+    );
+}
+
+class YouTubeKidsAndroidClient extends BaseYouTubeKidsClient {
+    YouTubeKidsAndroidClient ([
+        context.ClientContext clientContext,
+        context.ApiContext apiContext,
+    ]) :super (
+        clientContext ?? context.getClientContext (
+            service: context.Service.YouTubeKids,
+            device: context.Device.Android,
+        ),
+        apiContext,
+    );
 }
